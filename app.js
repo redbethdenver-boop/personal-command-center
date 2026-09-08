@@ -1,0 +1,250 @@
+const DB_NAME = "PersonalCommandCenterDB";
+const DB_VERSION = 1;
+let db;
+let currentModule = null;
+
+const modules = [
+  {key:"finance", name:"Net Worth", icon:"💰"},
+  {key:"planes", name:"Planes Near Me", icon:"✈️"},
+  {key:"travel", name:"Travel", icon:"🌎"},
+  {key:"houses", name:"Houses", icon:"🏡"},
+  {key:"shopping", name:"Shopping", icon:"🛒"},
+  {key:"recipes", name:"Recipes", icon:"🍳"},
+  {key:"prints", name:"3D Print List", icon:"🖨️"},
+  {key:"shortGoals", name:"Short-Term Goals", icon:"🎯"},
+  {key:"longGoals", name:"Long-Term Goals", icon:"🏆"},
+  {key:"projects", name:"Projects", icon:"🔨"},
+  {key:"tasks", name:"Tasks", icon:"✅"},
+];
+
+const financeAccounts = ["TSP","Vanguard","Schwab","Cash & Money Market","Home Equity","Other Assets"];
+
+function openDB(){
+  return new Promise((resolve,reject)=>{
+    const req=indexedDB.open(DB_NAME,DB_VERSION);
+    req.onupgradeneeded=()=>{
+      const d=req.result;
+      if(!d.objectStoreNames.contains("items")){
+        const s=d.createObjectStore("items",{keyPath:"id",autoIncrement:true});
+        s.createIndex("module","module",{unique:false});
+      }
+      if(!d.objectStoreNames.contains("holdings")){
+        const s=d.createObjectStore("holdings",{keyPath:"id",autoIncrement:true});
+        s.createIndex("account","account",{unique:false});
+      }
+    };
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error);
+  });
+}
+
+function store(name,mode="readonly"){return db.transaction(name,mode).objectStore(name)}
+function allFrom(name){return new Promise((res,rej)=>{const r=store(name).getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+function addTo(name,obj){return new Promise((res,rej)=>{const r=store(name,"readwrite").add(obj);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+function putTo(name,obj){return new Promise((res,rej)=>{const r=store(name,"readwrite").put(obj);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+function delFrom(name,id){return new Promise((res,rej)=>{const r=store(name,"readwrite").delete(id);r.onsuccess=()=>res();r.onerror=()=>rej(r.error)})}
+
+function money(n){return new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(Number(n||0))}
+function todayGreeting(){
+  const h=new Date().getHours();
+  return h<12?"Good morning.":h<17?"Good afternoon.":"Good evening.";
+}
+
+async function refreshDashboard(){
+  document.getElementById("greeting").textContent=todayGreeting();
+  const items=await allFrom("items");
+  const holdings=await allFrom("holdings");
+  const net=holdings.reduce((a,h)=>a+Number(h.value||0),0);
+  document.getElementById("netWorthSummary").textContent=money(net);
+  document.getElementById("taskSummary").textContent=items.filter(i=>i.module==="tasks"&&!i.completed).length;
+
+  const grid=document.getElementById("moduleGrid");
+  grid.innerHTML="";
+  for(const m of modules){
+    let count=0;
+    if(m.key==="finance") count=holdings.length;
+    else count=items.filter(i=>i.module===m.key).length;
+    const b=document.createElement("button");
+    b.className="module-tile";
+    b.innerHTML=`<div class="module-icon">${m.icon}</div><span class="module-name">${m.name}</span><span class="module-count">${count} ${count===1?"item":"items"}</span>`;
+    b.onclick=()=>openModule(m.key);
+    grid.appendChild(b);
+  }
+}
+
+async function openModule(key){
+  currentModule=key;
+  document.getElementById("dashboardView").classList.remove("active");
+  document.getElementById("moduleView").classList.add("active");
+  const m=modules.find(x=>x.key===key);
+  document.getElementById("moduleEyebrow").textContent=m.name.toUpperCase();
+  document.getElementById("moduleTitle").textContent=`${m.icon} ${m.name}`;
+  document.getElementById("addItemBtn").style.display=key==="planes"?"none":"inline-block";
+  await renderModule();
+}
+
+async function renderModule(){
+  const body=document.getElementById("moduleBody");
+  if(currentModule==="finance") return renderFinance(body);
+  if(currentModule==="planes") return renderPlanes(body);
+  const items=(await allFrom("items")).filter(i=>i.module===currentModule).sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+  if(!items.length){body.innerHTML='<div class="empty">Nothing here yet.</div>';return}
+  body.innerHTML='<div class="list-stack"></div>';
+  const stack=body.firstElementChild;
+  items.forEach(i=>{
+    const card=document.createElement("article");
+    card.className="list-card";
+    const detail=i.details?`<p>${escapeHtml(i.details)}</p>`:"";
+    const pills=[];
+    if(i.status) pills.push(i.status);
+    if(i.priority) pills.push(i.priority);
+    if(i.date) pills.push(i.date);
+    if(i.amount) pills.push(money(i.amount));
+    if(i.store) pills.push(i.store);
+    card.innerHTML=`<div class="list-top"><h3>${escapeHtml(i.title)}</h3>${i.completed?'<span class="pill">Done</span>':''}</div>${detail}
+      <div class="pills">${pills.map(x=>`<span class="pill">${escapeHtml(String(x))}</span>`).join("")}</div>
+      <div class="actions"><button data-edit="${i.id}">Edit</button><button class="danger" data-del="${i.id}">Delete</button></div>`;
+    card.querySelector("[data-edit]").onclick=()=>openItemForm(i);
+    card.querySelector("[data-del]").onclick=async()=>{if(confirm("Delete this item?")){await delFrom("items",i.id);await renderModule();await refreshDashboard();}};
+    stack.appendChild(card);
+  });
+}
+
+async function renderFinance(body){
+  const holdings=await allFrom("holdings");
+  body.innerHTML='<div class="note">Only enter assets you actually own. Vanguard and Schwab can use ticker + shares; TSP, cash, home equity and other assets can be entered as manual values.</div>';
+  for(const account of financeAccounts){
+    const rows=holdings.filter(h=>h.account===account);
+    const total=rows.reduce((a,h)=>a+Number(h.value||0),0);
+    const box=document.createElement("section");
+    box.className="finance-account";
+    box.innerHTML=`<div class="finance-account-head"><h3>${account}</h3><span class="account-total">${money(total)}</span></div>`;
+    rows.forEach(h=>{
+      const r=document.createElement("div");r.className="holding";
+      r.innerHTML=`<strong>${escapeHtml(h.name)}</strong>${h.ticker?` <span class="pill">${escapeHtml(h.ticker)}</span>`:""}
+      <div class="muted">${h.shares?`${h.shares} shares · `:""}${money(h.value)}</div>
+      <div class="actions"><button>Edit</button><button class="danger">Delete</button></div>`;
+      r.querySelector("button").onclick=()=>openHoldingForm(h);
+      r.querySelector(".danger").onclick=async()=>{if(confirm("Delete this holding?")){await delFrom("holdings",h.id);await renderModule();await refreshDashboard();}};
+      box.appendChild(r);
+    });
+    body.appendChild(box);
+  }
+}
+
+function renderPlanes(body){
+  body.innerHTML=`<div class="note">This uses your iPhone location and opens Flightradar24 centered around you. No paid API is required.</div>
+  <div class="card" style="padding:18px">
+    <h2 style="margin-bottom:8px">What's overhead?</h2>
+    <p class="muted">Tap below and allow location access.</p>
+    <button class="primary-btn" id="planesBtn" style="width:100%;margin-top:10px">Open Flightradar24 Near Me</button>
+  </div>`;
+  document.getElementById("planesBtn").onclick=()=>{
+    navigator.geolocation.getCurrentPosition(
+      p=>window.open(`https://www.flightradar24.com/${p.coords.latitude.toFixed(4)},${p.coords.longitude.toFixed(4)}/10`,"_blank"),
+      ()=>window.open("https://www.flightradar24.com/","_blank")
+    );
+  };
+}
+
+function moduleSpecificFields(module,item={}){
+  const common=`
+    <div class="field"><label>Title<input id="fTitle" value="${attr(item.title||"")}"></label></div>
+    <div class="field"><label>Details<textarea id="fDetails">${escapeHtml(item.details||"")}</textarea></label></div>`;
+  if(module==="shopping") return common+`<div class="field"><label>Store<input id="fStore" value="${attr(item.store||"")}"></label></div>`;
+  if(["shortGoals","longGoals","projects","tasks","travel"].includes(module)) return common+`
+    <div class="form-row"><div class="field"><label>Date<input type="date" id="fDate" value="${attr(item.date||"")}"></label></div>
+    <div class="field"><label>Priority<select id="fPriority"><option>Low</option><option ${item.priority==="Normal"?"selected":""}>Normal</option><option ${item.priority==="High"?"selected":""}>High</option></select></label></div></div>
+    ${module==="tasks"?`<div class="field"><label><input type="checkbox" id="fCompleted" ${item.completed?"checked":""}> Completed</label></div>`:""}`;
+  if(module==="houses") return common+`
+    <div class="form-row"><div class="field"><label>Price<input type="number" id="fAmount" value="${attr(item.amount||"")}"></label></div>
+    <div class="field"><label>Rating 1–5<input type="number" min="1" max="5" id="fRating" value="${attr(item.rating||"")}"></label></div></div>
+    <div class="field"><label>Listing URL<input type="url" id="fUrl" value="${attr(item.url||"")}"></label></div>`;
+  if(module==="prints") return common+`
+    <div class="field"><label>Status<select id="fStatus">${["Idea","Need Model","Ready to Print","Printing","Printed","Failed","Archived"].map(s=>`<option ${item.status===s?"selected":""}>${s}</option>`).join("")}</select></label></div>
+    <div class="field"><label>File / model URL<input type="url" id="fUrl" value="${attr(item.url||"")}"></label></div>`;
+  return common;
+}
+
+function openItemForm(item=null){
+  const isEdit=!!item;
+  showSheet(isEdit?"Edit item":"Add item", moduleSpecificFields(currentModule,item||{})+`
+    <div class="form-actions"><button class="ghost-btn" id="cancelForm">Cancel</button><button class="primary-btn" id="saveForm">${isEdit?"Save changes":"Add"}</button></div>`);
+  document.getElementById("cancelForm").onclick=hideSheet;
+  document.getElementById("saveForm").onclick=async()=>{
+    const obj={...(item||{}),module:currentModule,title:fTitle.value.trim(),details:fDetails.value.trim(),updatedAt:Date.now()};
+    if(!obj.title) return alert("Add a title.");
+    for(const [id,key] of [["fStore","store"],["fDate","date"],["fPriority","priority"],["fAmount","amount"],["fRating","rating"],["fUrl","url"],["fStatus","status"]]){
+      const el=document.getElementById(id); if(el) obj[key]=el.value;
+    }
+    const comp=document.getElementById("fCompleted"); if(comp) obj.completed=comp.checked;
+    if(isEdit) await putTo("items",obj); else await addTo("items",obj);
+    hideSheet();await renderModule();await refreshDashboard();
+  };
+}
+
+function openHoldingForm(h=null){
+  const account=h?.account||"Vanguard";
+  showSheet(h?"Edit asset":"Add asset",`
+    <div class="field"><label>Account<select id="hAccount">${financeAccounts.map(a=>`<option ${account===a?"selected":""}>${a}</option>`).join("")}</select></label></div>
+    <div class="field"><label>Name<input id="hName" value="${attr(h?.name||"")}"></label></div>
+    <div class="form-row"><div class="field"><label>Ticker (optional)<input id="hTicker" value="${attr(h?.ticker||"")}"></label></div>
+    <div class="field"><label>Shares (optional)<input type="number" step="0.0001" id="hShares" value="${attr(h?.shares||"")}"></label></div></div>
+    <div class="field"><label>Current total value<input type="number" step="0.01" id="hValue" value="${attr(h?.value||"")}"></label></div>
+    <div class="form-actions"><button class="ghost-btn" id="cancelHold">Cancel</button><button class="primary-btn" id="saveHold">Save</button></div>`);
+  cancelHold.onclick=hideSheet;
+  saveHold.onclick=async()=>{
+    const obj={...(h||{}),account:hAccount.value,name:hName.value.trim(),ticker:hTicker.value.trim().toUpperCase(),shares:Number(hShares.value||0),value:Number(hValue.value||0),updatedAt:Date.now()};
+    if(!obj.name) return alert("Add a name.");
+    if(h) await putTo("holdings",obj); else await addTo("holdings",obj);
+    hideSheet();await renderModule();await refreshDashboard();
+  };
+}
+
+function showSheet(title,html){sheetTitle.textContent=title;sheetContent.innerHTML=html;sheet.classList.remove("hidden")}
+function hideSheet(){sheet.classList.add("hidden")}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
+function attr(s){return escapeHtml(s)}
+
+async function exportData(){
+  const payload={version:1,exportedAt:new Date().toISOString(),items:await allFrom("items"),holdings:await allFrom("holdings")};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download=`Personal-Command-Center-Backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();URL.revokeObjectURL(a.href);
+}
+async function restoreData(file){
+  const data=JSON.parse(await file.text());
+  if(!confirm("Restore this backup? This will replace your current app data.")) return;
+  await new Promise((res,rej)=>{const tx=db.transaction(["items","holdings"],"readwrite");tx.objectStore("items").clear();tx.objectStore("holdings").clear();tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});
+  for(const x of data.items||[]){delete x.id;await addTo("items",x)}
+  for(const x of data.holdings||[]){delete x.id;await addTo("holdings",x)}
+  await refreshDashboard(); if(currentModule) await renderModule();
+  alert("Backup restored.");
+}
+function openMenu(){
+  showSheet("App menu",`<div class="menu-list">
+    <button id="backupBtn">⬇️ Backup My Data</button>
+    <button id="restoreBtn">⬆️ Restore Backup</button>
+    <button id="aboutBtn">ℹ️ About this app</button>
+  </div>`);
+  backupBtn.onclick=exportData;
+  restoreBtn.onclick=()=>restoreFile.click();
+  aboutBtn.onclick=()=>alert("Personal Command Center stores your personal data locally on this iPhone using IndexedDB.");
+}
+
+document.getElementById("backBtn").onclick=async()=>{currentModule=null;moduleView.classList.remove("active");dashboardView.classList.add("active");await refreshDashboard()}
+document.getElementById("addItemBtn").onclick=()=>currentModule==="finance"?openHoldingForm():openItemForm()
+document.getElementById("quickAddBtn").onclick=()=>{
+  showSheet("Quick Add",`<div class="field"><label>Section<select id="qModule">${modules.filter(m=>m.key!=="planes"&&m.key!=="finance").map(m=>`<option value="${m.key}">${m.name}</option>`).join("")}</select></label></div>
+  <div class="field"><label>Title<input id="qTitle"></label></div><div class="field"><label>Details<textarea id="qDetails"></textarea></label></div>
+  <div class="form-actions"><button class="ghost-btn" id="qCancel">Cancel</button><button class="primary-btn" id="qSave">Add</button></div>`);
+  qCancel.onclick=hideSheet;qSave.onclick=async()=>{if(!qTitle.value.trim())return alert("Add a title.");await addTo("items",{module:qModule.value,title:qTitle.value.trim(),details:qDetails.value.trim(),updatedAt:Date.now()});hideSheet();await refreshDashboard();}
+};
+menuBtn.onclick=openMenu;closeSheetBtn.onclick=hideSheet;
+sheet.onclick=e=>{if(e.target===sheet)hideSheet()};
+restoreFile.onchange=e=>{if(e.target.files[0])restoreData(e.target.files[0]);e.target.value=""};
+
+(async()=>{db=await openDB();await refreshDashboard();})();
+
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}
