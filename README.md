@@ -1,3 +1,21 @@
-# Personal Command Center iPhone v2
+# Personal Command Center iPhone v3 — Travel 2
 
-This update fixes Planes Near Me on iPhone/PWA by navigating in the same app window instead of trying to open a new tab after the asynchronous location request. It also adds a fallback button to open Flightradar24 without location.
+Travel is now a dedicated trip organizer.
+
+Each trip can store:
+- Trip name and destination
+- Departure and return dates
+- Flights
+- Hotel/lodging
+- Confirmation numbers
+- Transportation
+- Activities/reservations
+- Still-to-book list
+- Notes
+- Priority
+
+The Travel screen automatically separates Upcoming Trips from Past Trips.
+
+Existing Travel items remain compatible. A previous generic travel date is used as the departure date when editing an older entry.
+
+Planes Near Me fix from v2 is retained.
