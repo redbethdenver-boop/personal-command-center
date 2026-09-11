@@ -1,74 +1,41 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#6d28d9" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Command Center" />
-  <title>Personal Command Center</title>
-  <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="style.css" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#6d28d9">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Command Center">
+<title>Personal Command Center</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="app-header">
-    <div>
-      <div class="eyebrow">PERSONAL COMMAND CENTER</div>
-      <h1 id="greeting">Good evening.</h1>
+<header class="app-header">
+  <div><div class="eyebrow">PERSONAL COMMAND CENTER</div><h1 id="greeting">Good afternoon.</h1></div>
+  <button class="icon-btn" id="menuBtn">•••</button>
+</header>
+<main class="shell">
+  <section id="dashboardView" class="view active">
+    <div class="summary-grid">
+      <article class="summary-card"><span class="label">NET WORTH</span><strong id="netWorthSummary">$0</strong><span class="muted">manual + owned holdings only</span></article>
+      <article class="summary-card"><span class="label">OPEN TO-DOS</span><strong id="taskSummary">0</strong><span class="muted">things needing attention</span></article>
     </div>
-    <button class="icon-btn" id="menuBtn" aria-label="Menu">•••</button>
-  </header>
-
-  <main class="shell">
-    <section id="dashboardView" class="view active">
-      <div class="summary-grid">
-        <article class="summary-card">
-          <span class="label">NET WORTH</span>
-          <strong id="netWorthSummary">$0</strong>
-          <span class="muted">manual + owned holdings only</span>
-        </article>
-        <article class="summary-card">
-          <span class="label">OPEN TO-DOS</span>
-          <strong id="taskSummary">0</strong>
-          <span class="muted">things needing attention</span>
-        </article>
-      </div>
-
-      <div class="section-title-row">
-        <h2>My life</h2>
-        <button class="ghost-btn" id="quickAddBtn">+ Quick Add</button>
-      </div>
-
-      <div id="moduleGrid" class="module-grid"></div>
-    </section>
-
-    <section id="moduleView" class="view">
-      <button class="back-btn" id="backBtn">← Dashboard</button>
-      <div class="module-head">
-        <div>
-          <div id="moduleEyebrow" class="eyebrow"></div>
-          <h1 id="moduleTitle"></h1>
-        </div>
-        <button class="primary-btn" id="addItemBtn">+ Add</button>
-      </div>
-      <div id="moduleBody"></div>
-    </section>
-  </main>
-
-  <div id="sheet" class="sheet hidden" role="dialog" aria-modal="true">
-    <div class="sheet-panel">
-      <div class="sheet-handle"></div>
-      <div class="sheet-title-row">
-        <h2 id="sheetTitle">Add item</h2>
-        <button class="icon-btn" id="closeSheetBtn">✕</button>
-      </div>
-      <div id="sheetContent"></div>
+    <div class="section-title-row"><h2>My life</h2><button class="ghost-btn" id="quickAddBtn">+ Quick Add</button></div>
+    <div id="moduleGrid" class="module-grid"></div>
+  </section>
+  <section id="moduleView" class="view">
+    <button class="back-btn" id="backBtn">← Dashboard</button>
+    <div class="module-head">
+      <div><div id="moduleEyebrow" class="eyebrow"></div><h1 id="moduleTitle"></h1></div>
+      <button class="primary-btn" id="addItemBtn">+ Add</button>
     </div>
-  </div>
-
-  <input id="restoreFile" type="file" accept="application/json" hidden />
-
-  <script src="app.js"></script>
+    <div id="moduleBody"></div>
+  </section>
+</main>
+<div id="sheet" class="sheet hidden"><div class="sheet-panel"><div class="sheet-handle"></div><div class="sheet-title-row"><h2 id="sheetTitle">Add item</h2><button class="icon-btn" id="closeSheetBtn">✕</button></div><div id="sheetContent"></div></div></div>
+<input id="restoreFile" type="file" accept="application/json" hidden>
+<script src="app.js"></script>
 </body>
 </html>
