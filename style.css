@@ -18,3 +18,8 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}.app-header{padd
 .travel-alert{margin-top:12px;padding:10px 12px;background:#fff5e8;border:1px solid #f3d6a7;border-radius:12px;font-size:13px;color:#704715}
 .travel-detail-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}.travel-detail-grid>div{background:#faf9fc;border:1px solid var(--line);border-radius:12px;padding:10px}
 .travel-detail-grid span{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--purple);margin-bottom:4px}.travel-detail-grid p{margin:0;color:#514a60;font-size:13px;white-space:pre-wrap}
+
+.house-criteria{display:grid;gap:8px}
+.house-criteria>div{background:#faf9fc;border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:3px}
+.house-criteria span{font-size:10px;letter-spacing:.11em;font-weight:800;color:var(--purple)}
+.house-criteria strong{font-size:14px}

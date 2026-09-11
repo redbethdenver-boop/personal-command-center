@@ -1,21 +1,16 @@
-# Personal Command Center iPhone v3 — Travel 2
+# Personal Command Center iPhone v4 — Houses 2
 
-Travel is now a dedicated trip organizer.
+Houses is now a live search launcher instead of a manual house tracker.
 
-Each trip can store:
-- Trip name and destination
-- Departure and return dates
-- Flights
-- Hotel/lodging
-- Confirmation numbers
-- Transportation
-- Activities/reservations
-- Still-to-book list
-- Notes
-- Priority
+Search criteria:
+- Roughly within 50 miles of Monument, Colorado
+- $550,000 or less
+- House size at least 1,500 sq ft
+- Lot size at least 0.20 acres / 8,712 sq ft
+- Preference for homes near or backing to open space
 
-The Travel screen automatically separates Upcoming Trips from Past Trips.
+Buttons:
+- Open Matching Homes: opens a Zillow map search with price, house-size, lot-size, and map-area filters.
+- Prioritize Open Space: runs a current web search emphasizing open-space language in listings.
 
-Existing Travel items remain compatible. A previous generic travel date is used as the departure date when editing an older entry.
-
-Planes Near Me fix from v2 is retained.
+Travel 2 and Planes Near Me fixes are retained.
