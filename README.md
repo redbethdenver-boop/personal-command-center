@@ -1,16 +1,15 @@
-# Personal Command Center iPhone v4 — Houses 2
+# Personal Command Center iPhone v5 — Groceries
 
-Houses is now a live search launcher instead of a manual house tracker.
+Shopping has been redesigned and renamed Groceries.
 
-Search criteria:
-- Roughly within 50 miles of Monument, Colorado
-- $550,000 or less
-- House size at least 1,500 sq ft
-- Lot size at least 0.20 acres / 8,712 sq ft
-- Preference for homes near or backing to open space
+Features:
+- Fast grocery item entry
+- Optional quantity
+- Categories: Produce, Meat, Dairy, Bakery, Pantry, Frozen, Beverages, Household, Other
+- Tap an item to check/uncheck it
+- Checked items move to a Checked Off section
+- Clear Checked button
+- Share Grocery List uses the native iPhone Share Sheet, making it easy to send the list to Apple Notes, Messages, Mail, and other apps
+- If native sharing is unavailable, the app can copy/show the grocery list as text
 
-Buttons:
-- Open Matching Homes: opens a Zillow map search with price, house-size, lot-size, and map-area filters.
-- Prioritize Open Space: runs a current web search emphasizing open-space language in listings.
-
-Travel 2 and Planes Near Me fixes are retained.
+Travel 2, Houses 2, and Planes Near Me are retained.

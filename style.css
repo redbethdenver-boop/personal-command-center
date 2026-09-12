@@ -23,3 +23,8 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}.app-header{padd
 .house-criteria>div{background:#faf9fc;border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:3px}
 .house-criteria span{font-size:10px;letter-spacing:.11em;font-weight:800;color:var(--purple)}
 .house-criteria strong{font-size:14px}
+
+.grocery-toolbar{display:flex;gap:10px;align-items:center;margin:0 0 20px}.grocery-toolbar .primary-btn{flex:1}
+.grocery-section{margin-bottom:22px}.grocery-row{display:grid;grid-template-columns:42px 1fr auto;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;margin:8px 0;min-height:54px;overflow:hidden}
+.grocery-check{border:0;background:transparent;color:var(--purple);font-size:26px;height:100%}.grocery-main{border:0;background:transparent;text-align:left;padding:10px 4px;color:var(--ink);display:flex;flex-direction:column;gap:2px}.grocery-main strong{font-size:16px}.grocery-main span{font-size:12px;color:var(--muted)}
+.grocery-edit{border:0;background:transparent;color:var(--purple);font-weight:700;padding:14px}.grocery-done{opacity:.62}.grocery-done .grocery-main strong{text-decoration:line-through}
