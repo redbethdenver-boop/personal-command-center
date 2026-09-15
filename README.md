@@ -1,3 +1,5 @@
-# Personal Command Center iPhone v12 — Dashboard
+# Personal Command Center iPhone v12.1 — Dashboard Fix
 
-Redesigned dashboard with Quick Add, live at-a-glance counts, Needs Attention for tasks due within 14 days, summary cards, and a compact Everything grid. All existing modules and local data remain intact.
+Fixes the v12 dashboard rendering issue on iPhone/Safari.
+The redesigned dashboard now renders into the app's existing dashboardView container.
+All existing local data and modules are unchanged.
