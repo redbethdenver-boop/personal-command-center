@@ -1,15 +1,13 @@
-# Personal Command Center iPhone v8 — 3D Print List 2
+# Personal Command Center iPhone v9 — Goals 2
 
-3D Print List is now a print queue with:
-- To Do / In Progress / Completed sections
-- Project/model name
-- Status and one-tap Next Status
+Short-Term Goals and Long-Term Goals are consolidated into one Goals tile.
+
+Each goal includes:
+- Short-Term / Long-Term type
+- Target date
 - Priority
-- Quantity needed
-- Filament/color
-- Printer
-- Model/STL link
-- Deadline
+- Status
+- Progress from 0–100%
 - Notes
 
-All prior Personal Command Center features are retained.
+The Goals screen shows Active and Completed goals with progress bars. Existing items from the old Short-Term and Long-Term sections are included in the unified Goals view.
