@@ -1,3 +1,3 @@
-# Personal Command Center iPhone v11 — Projects + Tasks
+# Personal Command Center iPhone v12 — Dashboard
 
-Projects and Tasks now work together. Tasks may be linked to a project or stand alone. Projects show linked open-task counts. Tasks support priority, due date, notes, and tap-to-complete.
+Redesigned dashboard with Quick Add, live at-a-glance counts, Needs Attention for tasks due within 14 days, summary cards, and a compact Everything grid. All existing modules and local data remain intact.
