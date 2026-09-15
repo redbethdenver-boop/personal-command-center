@@ -1,15 +1,16 @@
-# Personal Command Center iPhone v5 — Groceries
+# Personal Command Center iPhone v7 — Recipes 3
 
-Shopping has been redesigned and renamed Groceries.
+Recipes now starts with three clear choices:
+- Add from Link
+- Add from Photo
+- Enter Recipe
 
-Features:
-- Fast grocery item entry
-- Optional quantity
-- Categories: Produce, Meat, Dairy, Bakery, Pantry, Frozen, Beverages, Household, Other
-- Tap an item to check/uncheck it
-- Checked items move to a Checked Off section
-- Clear Checked button
-- Share Grocery List uses the native iPhone Share Sheet, making it easy to send the list to Apple Notes, Messages, Mail, and other apps
-- If native sharing is unavailable, the app can copy/show the grocery list as text
+Also includes:
+- Search
+- Recipe photos/screenshots stored locally
+- Original recipe links
+- 1/2x, 1x, and 2x best-effort ingredient scaling
+- Add Ingredients to Groceries
+- iPhone Share Sheet support
 
-Travel 2, Houses 2, and Planes Near Me are retained.
+Automatic extraction from arbitrary recipe websites is intentionally not promised because this is a static, browser-only GitHub Pages app and many websites block cross-site page access.
