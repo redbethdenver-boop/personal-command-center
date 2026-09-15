@@ -1,12 +1,3 @@
-# Personal Command Center iPhone v10 — Marie Kondo Simplified
+# Personal Command Center iPhone v11 — Projects + Tasks
 
-The Marie Kondo tile contains only the whole-house checklist and progress tracking.
-
-- Tap items to check/uncheck them
-- Overall completion percentage
-- Per-section completion counts
-- Underwear and Shoes initially checked
-- Reset Entire Checklist option
-- No completion date, donation, trash/recycling, sold-item, or money tracking fields
-
-All prior Personal Command Center features are retained.
+Projects and Tasks now work together. Tasks may be linked to a project or stand alone. Projects show linked open-task counts. Tasks support priority, due date, notes, and tap-to-complete.
