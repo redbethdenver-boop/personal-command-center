@@ -1,13 +1,12 @@
-# Personal Command Center iPhone v9 — Goals 2
+# Personal Command Center iPhone v10 — Marie Kondo Simplified
 
-Short-Term Goals and Long-Term Goals are consolidated into one Goals tile.
+The Marie Kondo tile contains only the whole-house checklist and progress tracking.
 
-Each goal includes:
-- Short-Term / Long-Term type
-- Target date
-- Priority
-- Status
-- Progress from 0–100%
-- Notes
+- Tap items to check/uncheck them
+- Overall completion percentage
+- Per-section completion counts
+- Underwear and Shoes initially checked
+- Reset Entire Checklist option
+- No completion date, donation, trash/recycling, sold-item, or money tracking fields
 
-The Goals screen shows Active and Completed goals with progress bars. Existing items from the old Short-Term and Long-Term sections are included in the unified Goals view.
+All prior Personal Command Center features are retained.
