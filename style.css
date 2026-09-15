@@ -38,3 +38,8 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}.app-header{padd
 .recipe-add-grid strong,.recipe-add-grid span{display:block}.recipe-add-grid strong{font-size:13px;margin-top:5px}.recipe-add-grid span{font-size:10px;color:var(--muted);margin-top:3px}
 .recipe-mode-banner{font-weight:800;font-size:18px;color:var(--purple);margin:0 0 14px}
 @media(max-width:390px){.recipe-add-grid{grid-template-columns:1fr}.recipe-add-grid button{text-align:left;padding:11px 14px}.recipe-add-grid strong,.recipe-add-grid span{display:inline;margin-left:8px}}
+
+.print-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:0 0 22px}
+.print-summary div{background:#fff;border:1px solid var(--line);border-radius:14px;text-align:center;padding:12px 5px}
+.print-summary strong{display:block;font-size:24px;color:var(--purple)}.print-summary span{font-size:11px;color:var(--muted)}
+.print-section{margin-bottom:24px}.print-card p{white-space:pre-wrap}.print-card .actions{flex-wrap:wrap}
