@@ -1,5 +1,10 @@
-# Personal Command Center iPhone v12.3 — Grocery Save Fix
+# Personal Command Center iPhone v12.4 — Net Worth Fix
 
-Fixes Add/Edit in Groceries. The grocery form intentionally has no Details field, but the shared save routine was still requiring that field, causing the Add button to fail. The shared save routine now safely handles forms without Details.
+Fixes manual asset values such as Home Equity on iPhone.
 
-All dashboard and prior features are unchanged.
+The Current total value field now accepts:
+- 330000
+- 330,000
+- $330,000
+
+Commas, dollar signs, and spaces are safely removed before saving the numeric value. All v12.3 fixes and prior features are included.
