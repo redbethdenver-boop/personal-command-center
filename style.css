@@ -59,3 +59,5 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}.app-header{padd
 .dash-top-action button{border:0;background:var(--purple);color:#fff;border-radius:12px;padding:9px 13px;font-weight:750;font-size:14px}
 .dash-head{display:none!important}
 .dash-stats{margin-top:0}
+
+.networth-total{margin:0 0 14px;padding:18px;border-radius:18px;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}.networth-total span{font-size:12px;font-weight:800;letter-spacing:.08em;opacity:.9}.networth-total strong{font-size:25px;line-height:1;white-space:nowrap}
